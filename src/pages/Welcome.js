@@ -19,8 +19,12 @@ const Welcome = () => {
         alignItems: "center",
       }}
     >
-      <Button onClick={handleClick1}>Click to enter into Part1</Button>
-      <Button onClick={handleClick2}>Click to enter into Part2</Button>
+      <Button variant="contained" onClick={handleClick1}>
+        Click to enter into Part1
+      </Button>
+      <Button variant="contained" onClick={handleClick2}>
+        Click to enter into Part2
+      </Button>
     </div>
   );
 };
