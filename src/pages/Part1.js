@@ -10,6 +10,7 @@ const Part1 = () => {
   const [sliderMinMax, setSliderMinMax] = useState({});
   const [slider, setSlider] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
+  const [error, setError] = useState("");
   /* Get data for agent dropdown and min & max values of call time */
   const fetchAPI = async () => {
     getData1("getlistofagents")
@@ -30,6 +31,7 @@ const Part1 = () => {
   }, []);
   /* Called when clicked on submit button */
   const handleSubmit = async () => {
+    setError("");
     console.log(selectedOptions);
     const data = {
       info: {
@@ -41,6 +43,8 @@ const Part1 = () => {
     postData1("getfilteredcalls", data).then((r) => {
       if (r.data.data) {
         setRows([...r.data.data]);
+      } else {
+        setError("No data");
       }
     });
   };
@@ -62,6 +66,7 @@ const Part1 = () => {
         sliderMinMax={sliderMinMax}
         handleAfterChange={handleAfterChange}
         handleChange={handleChange}
+        error={error}
       />
       <button
         className="btn"

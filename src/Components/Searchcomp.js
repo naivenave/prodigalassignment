@@ -4,7 +4,8 @@ import "../pages/Part1.css";
 const { Option } = Select;
 
 const Searchcomp = (props) => {
-  const { handleAfterChange, handleChange, sliderMinMax, callData } = props;
+  const { handleAfterChange, handleChange, sliderMinMax, callData, error } =
+    props;
   return (
     <div>
       <div className="tag">
@@ -33,6 +34,9 @@ const Searchcomp = (props) => {
           />
         )}
       </div>
+      {error && (
+        <div style={{ textAlign: "center", fontSize: "1.5rem" }}>{error}</div>
+      )}
     </div>
   );
 };
