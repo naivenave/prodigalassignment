@@ -1,6 +1,6 @@
-import { Button } from "@material-ui/core";
 import React from "react";
 import { useNavigate } from "react-router";
+import "./Welcome.css";
 
 const Welcome = () => {
   const navigate = useNavigate();
@@ -12,19 +12,13 @@ const Welcome = () => {
     navigate("/part2");
   };
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Button variant="contained" onClick={handleClick1}>
+    <div className="center-div">
+      <button className="btn" onClick={handleClick1}>
         Click to enter into Part1
-      </Button>
-      <Button variant="contained" onClick={handleClick2}>
+      </button>
+      <button className="btn" onClick={handleClick2}>
         Click to enter into Part2
-      </Button>
+      </button>
     </div>
   );
 };

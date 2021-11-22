@@ -1,13 +1,12 @@
+import "antd/dist/antd.css";
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./index.css";
-import "antd/dist/antd.css";
-
-import reportWebVitals from "./reportWebVitals";
-import Welcome from "./pages/Welcome";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Part1 from "./pages/Part1";
 import Part2 from "./pages/Part2";
+import Welcome from "./pages/Welcome";
+import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>

@@ -1,37 +1,38 @@
+import { Select, Slider } from "antd";
 import React from "react";
-import Chip from "@mui/material/Chip";
-import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
+import "../pages/Part1.css";
+const { Option } = Select;
 
-const Searchcomp = () => {
+const Searchcomp = (props) => {
+  const { handleAfterChange, handleChange, sliderMinMax, callData } = props;
   return (
     <div>
-      <Autocomplete
-        multiple
-        id="fixed-tags-demo"
-        value={value}
-        onChange={(event, newValue) => {
-          setValue([
-            ...fixedOptions,
-            ...newValue.filter((option) => fixedOptions.indexOf(option) === -1),
-          ]);
-        }}
-        options={top100Films}
-        getOptionLabel={(option) => option.title}
-        renderTags={(tagValue, getTagProps) =>
-          tagValue.map((option, index) => (
-            <Chip
-              label={option.title}
-              {...getTagProps({ index })}
-              disabled={fixedOptions.indexOf(option) !== -1}
-            />
-          ))
-        }
-        style={{ width: 500 }}
-        renderInput={(params) => (
-          <TextField {...params} label="Fixed tag" placeholder="Favorites" />
+      <div className="tag">
+        <p className="agent">Add Agent</p>
+        <Select
+          mode="tags"
+          style={{ width: "100%" }}
+          placeholder="Search for agent"
+          onChange={handleChange}
+        >
+          {callData.map((item) => (
+            <Option key={item}>{item}</Option>
+          ))}
+        </Select>
+      </div>
+      <div className="tag">
+        <p className="agent">Select Call Duration</p>
+        {sliderMinMax && (
+          <Slider
+            style={{ width: "100%" }}
+            range
+            min={sliderMinMax?.minimum}
+            max={sliderMinMax?.maximum}
+            defaultValue={[20, 50]}
+            onAfterChange={handleAfterChange}
+          />
         )}
-      />
+      </div>
     </div>
   );
 };

@@ -1,108 +1,76 @@
-import { Autocomplete, TextField } from "@mui/material";
-import { AutoComplete } from "antd";
-import Slider from "@mui/material/Slider";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { DataGrid } from "@mui/x-data-grid";
-import { Button } from "@material-ui/core";
-const columns = [
-  { field: "id", headerName: "S. No.", width: 70 },
-  { field: "call_id", headerName: "Call ID", width: 70 },
-  { field: "agent_id", headerName: "Agent name", width: 130 },
-  { field: "call_time", headerName: "Call Time", width: 130 },
-];
+import Searchcomp from "../Components/Searchcomp";
+import Tablecomp1 from "../Components/Tablecomp1";
+import { getData1, postData1 } from "../services/api";
+import "./Part1.css";
 
 const Part1 = () => {
-  //   let options2 = [];
+  const [callData, setCallData] = useState([]);
+  const [rows, setRows] = useState([]);
+  const [sliderMinMax, setSliderMinMax] = useState({});
+  const [slider, setSlider] = useState([]);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+  /* Get data for agent dropdown and min & max values of call time */
   const fetchAPI = async () => {
-    const r = await axios.get(
-      "https://damp-garden-93707.herokuapp.com/getlistofagents"
-    );
-    console.log(r);
-    if (r.data) {
-      console.log(r.data.data.listofagents);
-      let options2 = r.data.data.listofagents.map((item) => {
-        return {
-          value: item,
-        };
-      });
-      console.log(options2);
-      setOption([...options2]);
-    }
-    const r2 = await axios.get(
-      "https://damp-garden-93707.herokuapp.com/getdurationrange"
-    );
-    console.log(r);
-    if (r2.data) {
-      console.log(r2.data.data);
-    }
+    getData1("getlistofagents")
+      .then((r) => {
+        setCallData([...r.data.data.listofagents]);
+      })
+      .catch((e) => console.log(e.message));
+
+    getData1("getdurationrange")
+      .then((r) => {
+        console.log(r);
+        setSliderMinMax({ ...r.data.data });
+      })
+      .catch((e) => console.log(e.message));
   };
   useEffect(() => {
     fetchAPI();
   }, []);
-  const [rows, setRows] = useState([]);
-  const [options, setOption] = useState([]);
-  const [slider, setSlider] = useState(1);
-  const [selectedOptions, setSelectedOptions] = useState([]);
+  /* Called when clicked on submit button */
   const handleSubmit = async () => {
-    let agent_list = selectedOptions.map((item) => item.value);
+    console.log(selectedOptions);
     const data = {
       info: {
-        filter_agent_list: agent_list,
-        filter_time_range: [1, slider],
+        filter_agent_list: selectedOptions,
+        filter_time_range: slider,
       },
     };
     console.log(data);
-    const r = await axios.post(
-      "https://damp-garden-93707.herokuapp.com/getfilteredcalls",
-      data
-    );
-    console.log(r.data.data);
-    let rowsdata = r.data.data.map((item, index) => {
-      return {
-        id: index + 1,
-        ...item,
-      };
+    postData1("getfilteredcalls", data).then((r) => {
+      if (r.data.data) {
+        setRows([...r.data.data]);
+      }
     });
-    setRows([...rowsdata]);
   };
-  const handleChange = (event, value) => setSelectedOptions(value);
-  const handleSlider = (event, value) => setSlider(value);
+  /* Called when selected any value from dropdown menu  */
+  const handleChange = (value) => {
+    console.log(`${value}`);
+    setSelectedOptions([...value]);
+  };
+  /* Called when there is change in slider value */
+  const handleAfterChange = (value) => {
+    console.log("onAfterChange: ", value);
+    setSlider(value);
+  };
   return (
     <div>
-      <Autocomplete
-        multiple
-        id="tags-outlined"
-        options={options}
-        getOptionLabel={(option) => option.value}
-        // defaultValue={[top100Films[13]]}
-        onChange={handleChange}
-        filterSelectedOptions
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Select filter on Agent"
-            placeholder="Type to select multiple filter"
-          />
-        )}
+      <p className="heading">Add Filter based on Agents and Call Duration</p>
+      <Searchcomp
+        callData={callData}
+        sliderMinMax={sliderMinMax}
+        handleAfterChange={handleAfterChange}
+        handleChange={handleChange}
       />
-      <Slider
-        // value={slider}
-        aria-label="Default"
-        valueLabelDisplay="auto"
-        min={1}
-        step={0.5}
-        max={10}
-        onChangeCommitted={handleSlider}
-      />
-      <Button onClick={handleSubmit}>Submit</Button>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5]}
-        checkboxSelection
-      />
+      <button
+        className="btn"
+        style={{ margin: "1rem auto" }}
+        onClick={handleSubmit}
+      >
+        Submit
+      </button>
+      <Tablecomp1 rows={rows} />
     </div>
   );
 };

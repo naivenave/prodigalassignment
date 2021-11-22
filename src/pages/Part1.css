@@ -1,0 +1,11 @@
+.heading {
+  text-align: center;
+  font-size: large;
+}
+.tag {
+  display: flex;
+}
+.agent {
+  margin-right: 1rem;
+  width: 7rem;
+}
